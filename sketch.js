@@ -1,132 +1,124 @@
-
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
-const Body = Matter.Body;
-const Render = Matter.Render;
-const Constraint=Matter.Constraint;
-var treeObj, stoneObj,groundObject, launcherObject;
-var mango1,mango2,mango3,mango4,mango5,mango6,mango7,mango8,mango9,mango10,mango11,mango12;
-var world,boy;
-var launchingForce=100;
+const Constraint = Matter.Constraint;
 
+var engine, world;
+var holder,ball,ground;
+var stand1,stand2;
+var ball;
+var slingShot;
+var polygon_img;
 function preload(){
-	boy=loadImage("images/boy.png");
-  }
-
+  polygon_img=loadImage("polygon.png");
+}
 function setup() {
-	createCanvas(1300, 600);
-	engine = Engine.create();
-	world = engine.world;
+  createCanvas(900,400);
+  engine = Engine.create();
+  world = engine.world;
+  Engine.run(engine);
+  ground = new Ground();
+  stand1 = new Stand(390,300,250,10);
+  stand2 = new Stand(700,200,200,10);
+ 
+  //level one
+  block1 = new Block(300,275,30,40);
+  console.log(block1);
+  block2 = new Block(330,275,30,40);
+  block3 = new Block(360,275,30,40);
+  block4 = new Block(390,275,30,40);
+  block5 = new Block(420,275,30,40);
+  block6 = new Block(450,275,30,40);
+  block7 = new Block(480,275,30,40);
+  //level two
+  block8 = new Block(330,235,30,40);
+  block9 = new Block(360,235,30,40);
+  block10 = new Block(390,235,30,40);
+  block11 = new Block(420,235,30,40);
+  block12 = new Block(450,235,30,40);
+  //level three
+  block13 = new Block(360,195,30,40);
+  block14 = new Block(390,195,30,40);
+  block15 = new Block(420,195,30,40);
+  //top
+  block16 = new Block(390,155,30,40);
 
-	stoneObj=new stone(235,420,30); 
+  //set 2 for second stand
+  //level one
+  blocks1 = new Block(640,175,30,40);
+  blocks2 = new Block(670,175,30,40);
+  blocks3 = new Block(700,175,30,40);
+  blocks4 = new Block(730,175,30,40);
+  blocks5 = new Block(760,175,30,40);
+  //level two
+  blocks6 = new Block(670,135,30,40);
+  blocks7 = new Block(700,135,30,40);
+  blocks8 = new Block(730,135,30,40);
+  //top
+  blocks9 = new Block(700,95,30,40);
 
-	mango1=new mango(1100,100,30);
-  mango2=new mango(1170,130,30);
-	mango3=new mango(1010,140,30);
-	mango4=new mango(1000,70,30);
-	mango5=new mango(1100,70,30);
-	mango6=new mango(1000,230,30);
-	mango7=new mango(900,230,40);
-	mango8=new mango(1140,150,40);
-	mango9=new mango(1100,230,40);
-	mango10=new mango(1200,200,40);
-	mango11=new mango(1120,50,40);
-	mango12=new mango(900,160,40);
+  //ball holder with slings
+  ball = Bodies.circle(50,200,20);
+  World.add(world,ball);
 
-	treeObj=new tree(1050,580);
-	groundObject=new ground(width/2,600,width,20);
-	launcherObject=new launcher(stoneObj.body,{x:235,y:420})
-  var render = Render.create({
-    element: document.body,
-    engine: engine,
-    options: {
-      width: 1300,
-      height: 600,
-      wireframes: false
-    }
-  });
-	
-	Engine.run(engine);
- // Render.run(render);
+  slingShot = new Slingshot(this.ball,{x:100,y:200});
+
 }
-
 function draw() {
+  background(56,44,44); 
+ 
+  //Engine.update(engine);
+  //text(mouseX + ',' + mouseY, 10, 15);
+  textSize(20);
+  fill("lightyellow");
+  text("Drag the Hexagonal Stone and Release it, to launch it towards the blocks",100,30);
 
-  background(230);
-  //frameRate(2)
- // Engine.update(engine)
-  textSize(25);
-  text("Press Space to get a second Chance to Play!!",50 ,50);
-  image(boy ,200,340,200,300);
-  //Engine.update(engine)
-  
+  ground.display();
+  stand1.display();
+  stand2.display();
+  strokeWeight(2);
+  stroke(15);
+  fill("skyblue");
+  block1.display();
+  block2.display();
+  block3.display();
+  block4.display();
+  block5.display();
+  block6.display();
+  block7.display();
+  fill("pink");
+  block8.display();
+  block9.display();
+  block10.display();
+  block11.display();
+  block12.display();
+  fill("turquoise");
+  block13.display();
+  block14.display();
+  block15.display();
+  fill("grey");
+  block16.display();
+  fill("skyblue");
+  blocks1.display();
+  blocks2.display();
+  blocks3.display();
+  blocks4.display();
+  blocks5.display();
+  fill("turquoise");
+  blocks6.display();
+  blocks7.display();
+  blocks8.display();
+  fill("pink")
+  blocks9.display();
+  fill("gold");
+  imageMode(CENTER)
+  image(polygon_img ,ball.position.x,ball.position.y,40,40);
 
-  treeObj.display();
-  stoneObj.display();
-  mango1.display();
-  mango2.display();
-  mango3.display();
-  mango4.display();
-  mango6.display();
- mango7.display();
-  mango8.display();
-  mango9.display();
-  mango10.display();
-  mango11.display();
-  mango12.display();
-  stoneObj.display();
-
-  groundObject.display();
-  launcherObject.display();
-  detectollision(stoneObj,mango1);
-  detectollision(stoneObj,mango2);
-  detectollision(stoneObj,mango3);
-  detectollision(stoneObj,mango4);
-  detectollision(stoneObj,mango5);
-  detectollision(stoneObj,mango6);
-  detectollision(stoneObj,mango7);
-  detectollision(stoneObj,mango8);
-  detectollision(stoneObj,mango9);
-  detectollision(stoneObj,mango10);
-  detectollision(stoneObj,mango11);
-  detectollision(stoneObj,mango12);
+  slingShot.display();
 }
-
-function mouseDragged()
-{
-	Matter.Body.setPosition(stoneObj.body, {x:mouseX, y:mouseY}) 
+function mouseDragged(){
+  Matter.Body.setPosition(this.ball,{x:mouseX,y:mouseY});
 }
-
-function mouseReleased()
-{
-	launcherObject.fly();
-    // distance=int(dist(stoneObj.x,stoneObj.y,mango1.x,mango1.y));
+function mouseReleased(){
+  slingShot.fly();
 }
-
-function keyPressed() {
-	if (keyCode === 32) {
-    Matter.Body.setPosition(stoneObj.body, {x:235, y:420}) 
-	  launcherObject.attach(stoneObj.body);
-	}
-  }
-
-  function detectollision(lstone,lmango){
-	/*var collision = Matter.SAT.collides(lstone,lmango);
-	if(collision.collided){
-		console.log("collided");
-		Matter.Body.setStatic(lmango,false);	
-	}*/
-  mangoBodyPosition=lmango.body.position
-  stoneBodyPosition=lstone.body.position
-  
-  var distance=dist(stoneBodyPosition.x, stoneBodyPosition.y, mangoBodyPosition.x, mangoBodyPosition.y)
-  //console.log(distance)
- // console.log(lmango.r+lstone.r)
-  	if(distance<=lmango.r+lstone.r)
-    {
-      //console.log(distance);
-  	  Matter.Body.setStatic(lmango.body,false);
-    }
-
-  }
